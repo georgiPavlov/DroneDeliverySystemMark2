@@ -11,6 +11,6 @@ import java.util.Scanner;
 public class Delivery implements DeliverySupplyRequest {
     @Override
     public void startOperation(Scanner scanner, Warehouse warehouse) {
-
+        System.out.println("Delivery");
     }
 }
