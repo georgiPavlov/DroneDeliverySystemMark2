@@ -1,9 +1,12 @@
 package DeliverySuppyPakage;
 
+import CoordinatesPakage.PairCoordinates;
 import ExceptionsPakage.InputExeption;
 import ProjectInterfaces.DeliverySupplyRequest;
 import WarehousePakage.Warehouse;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Scanner;
 
 /**
@@ -35,7 +38,14 @@ public class Request {
             request = factory.maker(choice);
             request.startOperation(scanner,currentWarehouse);
         }
-
-
     }
+
+    public static void main(String[] args) throws InputExeption {
+        Warehouse warehouse = new Warehouse(new PairCoordinates(41,41));
+        Request request = new Request(warehouse);
+        request.addToWarehouse();
+    }
+
+
+
 }
