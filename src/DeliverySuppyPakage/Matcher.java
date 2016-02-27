@@ -2,6 +2,9 @@ package DeliverySuppyPakage;
 
 import ExceptionsPakage.InputExeption;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 /**
  * Created by georgipavlov on 26.02.16.
  */
@@ -65,5 +68,16 @@ public class Matcher {
             throw new InputExeption(exeptionMessage);
         }
         return weight;
+    }
+
+    public static boolean validateDate(String date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-DD HH:MM");
+        try {
+            sdf.parse(date);
+            return true;
+        }
+        catch(ParseException ex) {
+            return false;
+        }
     }
 }

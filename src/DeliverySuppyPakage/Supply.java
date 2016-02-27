@@ -61,7 +61,7 @@ public class Supply implements DeliverySupplyRequest {
         int idInt = Matcher.returnQuantity(id," in adding product/exit");
         System.out.println("Enter date  YYYY-MM-DD HH:MM " );
         String inputDate = scanner.nextLine();
-        System.out.println("You enter  " +  validateDate(inputDate) + " date" );
+        System.out.println("You enter  " + Matcher.validateDate(inputDate) + " date" );
 
         System.out.println("Enter name");
         String name;
@@ -82,14 +82,5 @@ public class Supply implements DeliverySupplyRequest {
         return choice;
     }
 
-    public boolean validateDate(String date) {
-        SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-DD HH:MM");
-        try {
-            sdf.parse(date);
-            return true;
-        }
-        catch(ParseException ex) {
-            return false;
-        }
-    }
+
 }

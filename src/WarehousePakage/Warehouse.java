@@ -1,10 +1,14 @@
 package WarehousePakage;
 
 import CoordinatesPakage.PairCoordinates;
+import TimetablePakage.Timetable;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Created by georgipavlov on 26.02.16.
@@ -12,12 +16,14 @@ import java.util.concurrent.ConcurrentHashMap;
 public class Warehouse {
     private Map<Product, Integer> products;
     private PairCoordinates pairCoordinates;
+    private List<Timetable> timetables;
 
 
 
     public Warehouse(PairCoordinates pairCoordinates) {
         products = new ConcurrentHashMap<>();
         this.pairCoordinates = pairCoordinates;
+        timetables = new CopyOnWriteArrayList<>();
     }
 
 
