@@ -1,7 +1,11 @@
 package WarehousePakage;
 
+import ConstantsPakage.DroneConstants;
 import CoordinatesPakage.PairCoordinates;
+import DronePakage.Drone;
 import TimetablePakage.Timetable;
+
+import com.sun.org.apache.bcel.internal.classfile.Constant;
 import com.sun.org.apache.xpath.internal.operations.Or;
 
 import java.sql.Time;
@@ -18,6 +22,7 @@ public class Warehouse {
     private PairCoordinates pairCoordinates;
     private List<Timetable> timetables;
     public Queue<Order> orders;
+    private List<Drone> drones;
 
 
 
@@ -27,8 +32,16 @@ public class Warehouse {
         timetables = new CopyOnWriteArrayList<>();
         orders = new ConcurrentLinkedQueue<>();
         this.pairCoordinates = pairCoordinates;
+        drones = new CopyOnWriteArrayList<>();
+        for (int i = 0; i < DroneConstants.MAX_DRONES; i++) {
+            drones.add(new Drone());
+        }
 
 
+    }
+
+    public List<Drone> getDrones() {
+        return drones;
     }
 
     public void addOrder(Order order){

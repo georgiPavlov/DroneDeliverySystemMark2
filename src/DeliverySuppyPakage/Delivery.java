@@ -115,7 +115,7 @@ public class Delivery implements DeliverySupplyRequest {
         String yString = scanner.nextLine();
         int y = Matcher.returnQuantity(yString," in adding y coordinates");
         CalculatePath path = new CalculatePath();
-        System.out.println("Enter date  YYYY-MM-DD HH:MM " );
+        System.out.println("Enter date  yyyy-MM-dd HH:mm:ss" );
         String inputDate = scanner.nextLine();
         Matcher.validateDate(inputDate);
         int pathCalc = path.calculatePath(new PairCoordinates(x,y),warehouse);

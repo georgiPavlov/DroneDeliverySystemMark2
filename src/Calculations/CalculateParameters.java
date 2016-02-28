@@ -1,6 +1,6 @@
 package Calculations;
 
-import ConstantsPakage.Constants;
+import ConstantsPakage.DroneConstants;
 import ExceptionsPakage.TooManyDronesRequired;
 import WarehousePakage.Order;
 import WarehousePakage.Product;
@@ -22,8 +22,8 @@ public class CalculateParameters {
 
     public static int getNumberOfRequiredDrones(Order order){
         double weight = orderWeight(order);
-        double requiredDrones  = weight / Constants.MAX_CAPASITY;
-        if(requiredDrones > Constants.MAX_DRONES){
+        double requiredDrones  = weight / DroneConstants.MAX_CAPASITY;
+        if(requiredDrones > DroneConstants.MAX_DRONES){
             try {
                 throw new TooManyDronesRequired();
             } catch (TooManyDronesRequired tooManyDrones) {

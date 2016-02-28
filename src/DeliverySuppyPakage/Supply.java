@@ -64,7 +64,7 @@ public class Supply implements DeliverySupplyRequest {
         System.out.println("Enter id");
         String id = scanner.nextLine();
         int idInt = Matcher.returnQuantity(id," in adding product/exit");
-        System.out.println("Enter date  YYYY-MM-DD HH:MM " );
+        System.out.println("Enter date  yyyy-MM-dd HH:mm:ss " );
         String inputDate = scanner.nextLine();
         Matcher.validateDate(inputDate);
         tempInputDate = inputDate;
