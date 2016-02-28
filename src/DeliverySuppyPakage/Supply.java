@@ -2,6 +2,7 @@ package DeliverySuppyPakage;
 
 import ExceptionsPakage.InputExeption;
 import ProjectInterfaces.DeliverySupplyRequest;
+import TimetablePakage.Timetable;
 import WarehousePakage.Product;
 import WarehousePakage.Warehouse;
 
@@ -15,11 +16,13 @@ import java.util.Scanner;
  * Created by georgipavlov on 26.02.16.
  */
 public class Supply implements DeliverySupplyRequest {
+    String tempInputDate;
+
     @Override
     public void startOperation(Scanner scanner, Warehouse warehouse) {
         boolean loop = true;
         int choice =0;
-        int quantity=0;
+        int quantity;
         while (loop){
             try {
                 choice = menu1(scanner);
@@ -32,12 +35,14 @@ public class Supply implements DeliverySupplyRequest {
                         Product product = menu2(scanner);
                         quantity = menu3(scanner);
                         warehouse.addProduct(product,quantity);
+                        warehouse.addTimeTable(new Timetable(product.getId(),tempInputDate));
                     } catch (InputExeption inputExeption) {
                         inputExeption.printStackTrace();
                     }
                     continue;
                 }case 2:{
                     loop = false;
+                    System.out.println("return to main menu...");
                 }
             }
 
@@ -61,8 +66,8 @@ public class Supply implements DeliverySupplyRequest {
         int idInt = Matcher.returnQuantity(id," in adding product/exit");
         System.out.println("Enter date  YYYY-MM-DD HH:MM " );
         String inputDate = scanner.nextLine();
-        System.out.println("You enter  " + Matcher.validateDate(inputDate) + " date" );
-
+        Matcher.validateDate(inputDate);
+        tempInputDate = inputDate;
         System.out.println("Enter name");
         String name;
         name = scanner.nextLine();

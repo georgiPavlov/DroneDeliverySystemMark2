@@ -33,6 +33,7 @@ public class Request {
             choice =  Matcher.returnKey(tryNumber,"in (Enter operation (1)delivery (2)supply)");
             if(choice == 3){
                 loop = false;
+                System.out.println("Good bye...");
                 continue;
             }
             request = factory.maker(choice);

@@ -2,12 +2,12 @@ package WarehousePakage;
 
 import CoordinatesPakage.PairCoordinates;
 import TimetablePakage.Timetable;
+import com.sun.org.apache.xpath.internal.operations.Or;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.sql.Time;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
@@ -17,6 +17,7 @@ public class Warehouse {
     private Map<Product, Integer> products;
     private PairCoordinates pairCoordinates;
     private List<Timetable> timetables;
+    public Queue<Order> orders;
 
 
 
@@ -24,6 +25,32 @@ public class Warehouse {
         products = new ConcurrentHashMap<>();
         this.pairCoordinates = pairCoordinates;
         timetables = new CopyOnWriteArrayList<>();
+        orders = new ConcurrentLinkedQueue<>();
+        this.pairCoordinates = pairCoordinates;
+
+
+    }
+
+    public void addOrder(Order order){
+        orders.add(order);
+    }
+
+    public Order returnLastOrder(){
+        return orders.poll();
+    }
+
+
+
+    public PairCoordinates getPairCoordinates() {
+        return pairCoordinates;
+    }
+
+    public void addTimeTable(Timetable timetable){
+        timetables.add(timetable);
+    }
+
+    public Timetable getTimetableIndex(int i){
+        return timetables.get(i);
     }
 
 

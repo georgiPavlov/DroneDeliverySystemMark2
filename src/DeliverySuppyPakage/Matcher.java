@@ -70,14 +70,14 @@ public class Matcher {
         return weight;
     }
 
-    public static boolean validateDate(String date) {
+    public static boolean validateDate(String date) throws InputExeption {
         SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-DD HH:MM");
         try {
             sdf.parse(date);
             return true;
         }
         catch(ParseException ex) {
-            return false;
+            throw new InputExeption(" in date");
         }
     }
 }
