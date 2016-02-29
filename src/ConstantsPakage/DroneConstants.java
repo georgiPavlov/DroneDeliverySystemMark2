@@ -6,5 +6,6 @@ package ConstantsPakage;
 public class DroneConstants {
     public static final int MAX_DRONES = 10;
     public static final int MAX_CAPASITY = 10;
+    public static final int CHARGING_RATE = 5;
 
 }
