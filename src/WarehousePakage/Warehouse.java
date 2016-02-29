@@ -25,6 +25,7 @@ public class Warehouse {
     public Queue<Order> orders;
     private List<Drone> drones;
     private List<History> histories;
+    private Distributor distributor;
 
 
 
@@ -39,6 +40,8 @@ public class Warehouse {
         for (int i = 0; i < DroneConstants.MAX_DRONES; i++) {
             drones.add(new Drone());
         }
+        distributor = new Distributor(this);
+        distributor.start();
 
 
     }
