@@ -100,9 +100,9 @@ public class Distributor extends Thread {
                     }
                 }
             }while (inAnotherTimeWindow);
-            if(tryItGoesToWindow(endDate,finishDate){
+            if(tryItGoesToWindow(endDate,finishDate,windows)){
                 isBetweenTwoWindows = true;
-                finishDate = addNewTime(finishDate,windows.get(mainWindowsIndex));
+                endDate = addNewTime(windows.get(mainWindowsIndex));
             }
 
 
@@ -111,18 +111,35 @@ public class Distributor extends Thread {
 
     }
 
-    private String addNewTime(String finishDate, DroneDeliveryWindows droneDeliveryWindows) {
+    private String addNewTime(DroneDeliveryWindows droneDeliveryWindows) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime endLocalDateTime = LocalDateTime.parse(droneDeliveryWindows.getStartTime(), formatter);
+        return  endLocalDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+    }
 
+
+
+    private String calculateFinishDate(String endDate, int battery) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime endDateLocal = LocalDateTime.parse(endDate , formatter);
+        endDateLocal = endDateLocal.plusMinutes(battery);
+        return endDateLocal.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 
     int mainWindowsIndex = 0;
-
-    private String calculateFinishDate(String endDate, int battery) {
-
-    }
-
-    private boolean tryItGoesToWindow(String endDate, String finishDate ) {
-
+    private boolean tryItGoesToWindow(String endDate, String finishDate,List<DroneDeliveryWindows> windows ) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime endLocalDateTime = LocalDateTime.parse(endDate, formatter);
+        LocalDateTime finishLocalDateTime = LocalDateTime.parse(finishDate, formatter);
+        for (int i = 0; i < windows.size() ; i++) {
+            LocalDateTime startLocalDateTimeWindow = LocalDateTime.parse(windows.get(i).getStartTime(), formatter);
+            LocalDateTime finishLocalDateTimeWindow = LocalDateTime.parse(windows.get(i).getEndTime(), formatter);
+            if(endLocalDateTime.isBefore(startLocalDateTimeWindow) &&
+                    finishLocalDateTime.isAfter(finishLocalDateTimeWindow)){
+                mainWindowsIndex = i;
+                return true;
+            }
+        }
         return false;
     }
 
