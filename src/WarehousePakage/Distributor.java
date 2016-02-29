@@ -5,6 +5,7 @@ import Calculations.CalculateParameters;
 import ConstantsPakage.DroneConstants;
 import DronePakage.Drone;
 import DronePakage.DroneDeliveryWindows;
+import HistoryPakage.History;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -19,9 +20,6 @@ public class Distributor extends Thread {
     private boolean loop = true;
     private List<Drone> drones;
     private List<Distance> distances;
-
-
-
 
 
     public Distributor(Warehouse warehouse) {
@@ -70,16 +68,48 @@ public class Distributor extends Thread {
         }
         Distance smallestDistance = findSmallestDistance();
         distances = new ArrayList<>();
-        putToDrone(smallestDistance);
+        putToDrone(smallestDistance,order);
     }
 
-    private void putToDrone(Distance smallestDistance) {
+    private void putToDrone(Distance smallestDistance,Order order) {
+        int index =0;
+        boolean startsFromAnotherDistanceEnd = false;
         for (int i = 0; i < drones.get(smallestDistance.getDroneIndex()).
                 getDroneDeliveryWindowsList().size() ; i++) {
+            if(drones.get(smallestDistance.getDroneIndex()).
+                    getDroneDeliveryWindowsList().get(i).getEndTime().equals(smallestDistance.getStartDate())){
+                startsFromAnotherDistanceEnd = true;
+                index = i;
+                break;
+            }
+        }
+        if(startsFromAnotherDistanceEnd){
+            int batteryMinus ;
+            if(order.getBattery() > drones.get(smallestDistance.getDroneIndex()).
+                    getDroneDeliveryWindowsList().get(index).getEndBattery()){
+                batteryMinus = order.getBattery() - drones.get(smallestDistance.getDroneIndex()).
+                        getDroneDeliveryWindowsList().get(index).getEndBattery();
+                String newEndDateWithMinusBatteryTime =
+                        getEndTimeRequaredForBattery(batteryMinus,smallestDistance.getEndDate());
+                smallestDistance.setEndDate(newEndDateWithMinusBatteryTime);
+                drones.get(smallestDistance.getDroneIndex()).getDroneDeliveryWindowsList().
+                        get(index).setEndBattery(batteryMinus);
+                drones.get(smallestDistance.getDroneIndex()).getDroneDeliveryWindowsList().
+                        get(index).setEndTime(smallestDistance.getEndDate());
+            }else {
+                drones.get(smallestDistance.getDroneIndex()).addDroneDeliveryWindow(
+                        new DroneDeliveryWindows(smallestDistance.getStartDate(),smallestDistance.getEndDate(),0));
+            }
+            long[] distanse = CalculateDate.getChronoUnits(order.getDate(),smallestDistance.getEndDate());
+            warehouse.addHistory(new History(order.getId(),distanse));
 
 
         }
+
+
     }
+
+
 
     private Distance findSmallestDistance() {
         long[] smallestDistance = distances.get(0).getTotalDistance();
@@ -247,15 +277,6 @@ public class Distributor extends Thread {
 
         }
         return true;
-    }
-
-    public static void main(String[] args) {
-        String date = "2015-12-12 12:12:31";
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        LocalDateTime firstLocalDateTime = LocalDateTime.parse(date, formatter);
-        firstLocalDateTime = firstLocalDateTime.minusMinutes(30);
-        String date2 = firstLocalDateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        System.out.println(date2);
     }
 
 

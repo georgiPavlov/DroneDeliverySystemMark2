@@ -34,6 +34,7 @@ public class Delivery implements DeliverySupplyRequest {
                 case 1:{
                     try {
                         findProduct(scanner);
+
                     } catch (InputExeption inputExeption) {
                         inputExeption.printStackTrace();
                     }
@@ -78,6 +79,7 @@ public class Delivery implements DeliverySupplyRequest {
             }
             innerLoop = menu4(scanner);
         }
+
         addOrder(products,scanner,hashMap);
 
     }
@@ -124,9 +126,23 @@ public class Delivery implements DeliverySupplyRequest {
             order.addProduct(products.get(i));
         }
         order.addMap(map);
+        System.out.println("Enter id for the delivery (integer)");
+        int id  = scanner.nextInt();
+        order.setId(id);
+
         warehouse.addOrder(order);
         synchronized (warehouse.orders){
             warehouse.orders.notifyAll();
+        }
+        P: while (true){
+            for (int i = 0; i <warehouse.getHistories().size() ; i++) {
+                if(order.getId() == warehouse.setHistory(i).getId()){
+                    for (int j = 0; j < warehouse.setHistory(i).getDistance().length  ; j++) {
+                        System.out.println(warehouse.setHistory(i).getDistance()[i]);
+                    }
+                    break P;
+                }
+            }
         }
     }
 }

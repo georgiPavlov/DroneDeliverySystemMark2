@@ -12,14 +12,19 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * Created by georgipavlov on 28.02.16.
  */
 public class History {
-    private Queue<Order> orders ;
+    private int id;
+    private long[] distance;
 
-    public History(){
-        Queue<Order> orders  = new ConcurrentLinkedQueue<>();
+    public History(int id, long[] distance) {
+        this.id = id;
+        this.distance = distance;
     }
 
-    public Queue<Order> getOrders() {
-        return orders;
+    public int getId() {
+        return id;
     }
 
+    public long[] getDistance() {
+        return distance;
+    }
 }

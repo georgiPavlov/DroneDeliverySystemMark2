@@ -14,6 +14,10 @@ public class Drone {
     private List<DroneDeliveryWindows> droneDeliveryWindowsList;
     private Queue<Order> orders ;
 
+    public void addDroneDeliveryWindow(DroneDeliveryWindows droneDeliveryWindows){
+        droneDeliveryWindowsList.add(droneDeliveryWindows);
+    }
+
     public Drone(){
         List<DroneDeliveryWindows> droneDeliveryWindowsList = new CopyOnWriteArrayList<>();
         Queue<Order> orders  = new ConcurrentLinkedQueue<>();

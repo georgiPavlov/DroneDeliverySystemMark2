@@ -31,4 +31,20 @@ public class Distance {
     public long[] getTotalDistance() {
         return totalDistance;
     }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
+    }
+
+    public void setStartDate(String startDate) {
+        this.startDate = startDate;
+    }
+
+    public void setTotalDistance(long[] totalDistance) {
+        this.totalDistance = totalDistance;
+    }
+
+    public void setDroneIndex(int droneIndex) {
+        this.droneIndex = droneIndex;
+    }
 }

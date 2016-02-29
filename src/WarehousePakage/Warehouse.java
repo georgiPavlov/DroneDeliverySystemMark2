@@ -3,6 +3,7 @@ package WarehousePakage;
 import ConstantsPakage.DroneConstants;
 import CoordinatesPakage.PairCoordinates;
 import DronePakage.Drone;
+import HistoryPakage.History;
 import TimetablePakage.Timetable;
 
 import com.sun.org.apache.bcel.internal.classfile.Constant;
@@ -23,6 +24,7 @@ public class Warehouse {
     private List<Timetable> timetables;
     public Queue<Order> orders;
     private List<Drone> drones;
+    private List<History> histories;
 
 
 
@@ -33,11 +35,24 @@ public class Warehouse {
         orders = new ConcurrentLinkedQueue<>();
         this.pairCoordinates = pairCoordinates;
         drones = new CopyOnWriteArrayList<>();
+        histories = new CopyOnWriteArrayList<>();
         for (int i = 0; i < DroneConstants.MAX_DRONES; i++) {
             drones.add(new Drone());
         }
 
 
+    }
+
+    public List<History> getHistories() {
+        return histories;
+    }
+
+    public void addHistory(History history){
+        histories.add(history);
+    }
+
+    public History setHistory(int index){
+        return histories.get(index);
     }
 
     public List<Drone> getDrones() {
