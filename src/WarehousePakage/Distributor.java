@@ -194,6 +194,9 @@ public class Distributor extends Thread {
                 droneDeliveryWindows.getEndTime());
         long [] distanceDate = CalculateDate.getChronoUnits(droneDeliveryWindows.getStartTime(),
                 date);
+        if(date.equals(droneDeliveryWindows.getStartTime())){
+            return true;
+        }
         if(distanceDate[0] == 0){
             return  false;
         }
@@ -209,6 +212,7 @@ public class Distributor extends Thread {
             if(distanceDate[i] < distanceWindow[i]){
                 return false;
             }
+
         }
         return true;
     }
