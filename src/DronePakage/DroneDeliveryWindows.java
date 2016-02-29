@@ -26,4 +26,16 @@ public class DroneDeliveryWindows {
     public int getEndBattery() {
         return endBattery;
     }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
+
+    public void setEndBattery(int endBattery) {
+        this.endBattery = endBattery;
+    }
 }

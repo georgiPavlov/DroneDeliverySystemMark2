@@ -8,6 +8,7 @@ import DronePakage.DroneDeliveryWindows;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,6 +18,9 @@ public class Distributor extends Thread {
     private Warehouse warehouse;
     private boolean loop = true;
     private List<Drone> drones;
+    private List<Distance> distances;
+
+
 
 
 
@@ -62,11 +66,39 @@ public class Distributor extends Thread {
 
     private void addToDroneOrder(Order order) {
         for (int i = 0; i < drones.size() ; i++) {
-            currentDroneDeliveryWindows(order,drones.get(i));
+            currentDroneDeliveryWindows(order,drones.get(i),i);
+        }
+        Distance smallestDistance = findSmallestDistance();
+        distances = new ArrayList<>();
+        putToDrone(smallestDistance);
+    }
+
+    private void putToDrone(Distance smallestDistance) {
+        for (int i = 0; i < drones.get(smallestDistance.getDroneIndex()).
+                getDroneDeliveryWindowsList().size() ; i++) {
+
+
         }
     }
 
-    private void currentDroneDeliveryWindows(Order order, Drone drone) {
+    private Distance findSmallestDistance() {
+        long[] smallestDistance = distances.get(0).getTotalDistance();
+        long[] tempDateDistance;
+        int smallestIndex= 0;
+        p: for (int i = 1; i < distances.size() ; i++) {
+            tempDateDistance = distances.get(i).getTotalDistance();
+            for (int j = 0; j < smallestDistance.length ; j++) {
+                if(tempDateDistance[j] < smallestDistance[j]){
+                    smallestDistance = tempDateDistance;
+                    smallestIndex = i;
+                    continue p;
+                }
+            }
+        }
+        return distances.get(smallestIndex);
+    }
+
+    private void currentDroneDeliveryWindows(Order order, Drone drone,int droneIndex) {
         List<DroneDeliveryWindows> windows = drone.getDroneDeliveryWindowsList();
         String endDate = getEndTimeRequaredForBattery(order.getBattery(),order.getDate());
         boolean inAnotherTimeWindow;
@@ -107,8 +139,8 @@ public class Distributor extends Thread {
 
 
         }while (isBetweenTwoWindows);
-
-
+        long[] totalDistance = CalculateDate.getChronoUnits(order.getDate(),finishDate);
+        distances.add(new Distance(endDate,finishDate,totalDistance,droneIndex));
     }
 
     private String addNewTime(DroneDeliveryWindows droneDeliveryWindows) {
