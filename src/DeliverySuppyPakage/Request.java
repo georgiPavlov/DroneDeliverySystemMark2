@@ -1,10 +1,12 @@
 package DeliverySuppyPakage;
 
 import CoordinatesPakage.PairCoordinates;
+import DroneDataBacePakage.MakeOperations;
 import ExceptionsPakage.InputExeption;
 import ProjectInterfaces.DeliverySupplyRequest;
 import WarehousePakage.Warehouse;
 
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Scanner;
@@ -43,8 +45,23 @@ public class Request {
 
     public static void main(String[] args) throws InputExeption {
         Warehouse warehouse = new Warehouse(new PairCoordinates(41,41));
+        MakeOperations operations = new MakeOperations(warehouse);
+        try {
+            operations.readFromDB_Supply();
+            operations.readFromDB_Order();
+            operations.readFromDB_DRONE_DELIVERY_WINDOWS();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         Request request = new Request(warehouse);
         request.addToWarehouse();
+        try {
+            operations.writeFromDB_Supply();
+            operations.writeFromDB_Delivery();
+            operations.writeFromDB_DRONE_DELIVERY_WINDOWS();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 

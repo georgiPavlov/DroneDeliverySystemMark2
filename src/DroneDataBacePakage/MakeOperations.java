@@ -1,6 +1,7 @@
 package DroneDataBacePakage;
 
 import CoordinatesPakage.PairCoordinates;
+import DronePakage.Drone;
 import DronePakage.DroneDeliveryWindows;
 import WarehousePakage.Order;
 import WarehousePakage.Product;
@@ -9,6 +10,7 @@ import WarehousePakage.Warehouse;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -26,6 +28,19 @@ public class MakeOperations {
 
     public MakeOperations(Warehouse warehouse) {
         this.warehouse = warehouse;
+        try {
+            connectionToDataBase();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try {
+            stmt = conn.createStatement();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void connectionToDataBase() throws ClassNotFoundException, SQLException {
@@ -35,9 +50,10 @@ public class MakeOperations {
         System.out.println("Connecting to a selected database...");
         conn = DriverManager.getConnection(DB_URL, USER, PASS);
         System.out.println("Connected database successfully...");
+
     }
 
-    private void readFromDB_Supply(Statement stmt) throws SQLException {
+    public void readFromDB_Supply() throws SQLException {
         String sql = "SELECT TableProducts.quantity,PRODUCT.*\n" +
                      "from TableProducts JOIN PRODUCT\n" +
                      "ON TableProducts.product_id = PRODUCT.id\n" +
@@ -52,7 +68,7 @@ public class MakeOperations {
         }
     }
 
-    public void readFromDB_Order(Statement stmt) throws SQLException {
+    public void readFromDB_Order() throws SQLException {
         String sql = "SELECT ORDERS_2.id as order_id,ORDERS_ADDS.stringDate,ORDERS_ADDS.battery,a1.*,COORDINATES.X,COORDINATES.Y\n" +
                 "from ORDERS_2 \n" +
                 "JOIN (\n" +
@@ -93,7 +109,7 @@ public class MakeOperations {
         }
     }
 
-    public void readFromDB_DRONE_DELIVERY_WINDOWS(Statement stmt) throws SQLException {
+    public void readFromDB_DRONE_DELIVERY_WINDOWS() throws SQLException {
         String sql = "select * from DRONE_DELIVERY_WINDOWS;";
         ResultSet rs = stmt.executeQuery(sql);
         while (rs.next()){
@@ -108,7 +124,7 @@ public class MakeOperations {
 
 
 
-    public void writeFromDB_Supply(Statement stmt) throws SQLException {
+    public void writeFromDB_Supply() throws SQLException {
         stmt = conn.createStatement();
         Map<Product,Integer> mp = warehouse.getProducts();
         Iterator it = mp.entrySet().iterator();
@@ -120,14 +136,14 @@ public class MakeOperations {
                      "VALUES ('"+product.getId()+"','"+product.getName()+"','"
                     +product.getWeightPerQuantity()+"','NULL')";
             stmt.executeUpdate(productSQL);
-            String tableProducts =  "INSERT INTO PRODUCT " +
+            String tableProducts =  "INSERT INTO TableProducts " +
                      "VALUES (NULL,'"+pair.getValue()+"','"+product.getId()+"','1','0')";
             stmt.executeUpdate(tableProducts);
         }
         System.out.println("Inserted records into the table...");
     }
 
-    public void writeFromDB_Delivery(Statement stmt) throws SQLException {
+    public void writeFromDB_Delivery() throws SQLException {
         while (!warehouse.orders.isEmpty()){
            Order order =  warehouse.orders.poll();
             String orders_adds =  "INSERT INTO ORDERS_ADDS " +
@@ -137,9 +153,54 @@ public class MakeOperations {
                     "" + order.getDate() + ";";
             ResultSet rs = stmt.executeQuery(sql1);
             int orders_add_key = rs.getInt("id");
+            String coordinates =  "INSERT INTO COORDINATES " +
+                    "VALUES (NULL,'"+order.getPairCoordinates().getX()+"','"+order.getPairCoordinates().getY()+"')";
+            stmt.executeUpdate(coordinates);
+            String sql2 = "select * from  COORDINATES WHERE  COORDINATES.X =" +
+                    "" + order.getPairCoordinates().getX() + "AND COORDINATES.Y = "+
+                    order.getPairCoordinates().getY() +";";
+            ResultSet rs2 = stmt.executeQuery(sql2);
+            int coordinates_key = rs2.getInt("id");
+            ArrayList<Product> products = order.getPakageOrder();
+            ResultSet rs3 = null;
+            for (int i = 0; i <products.size(); i++) {
+                Product product = products.get(i);
+                String productSQL = "INSERT INTO PRODUCT " +
+                        "VALUES ('"+product.getId()+"','"+product.getName()+"','"
+                        +product.getWeightPerQuantity()+"','NULL')";
+                stmt.executeUpdate(productSQL);
+                String tableProducts =  "INSERT INTO TableProducts " +
+                        "VALUES (NULL,'"+order.returnQuantity(product.getId())+"','"+product.getId()+"','0','1')";
+                stmt.executeUpdate(tableProducts);
+               // ---------------------------------------
+                String sql3 = "select * from  TableProducts WHERE  TableProducts.quantity  =" +
+                        "" + order.returnQuantity(product.getId()) + "AND TableProducts.product_id  = "+
+                        product.getId() +"AND TableProducts.delivered  = 1"+";";
+                 rs3 = stmt.executeQuery(sql3);
+                int id3 = rs3.getInt("id");
+
+                String orders_2 =  "INSERT INTO ORDERS_2 " +
+                        "VALUES (NULL,'"+orders_add_key+"','"+coordinates_key+"','"+id3+"')";
+                stmt.executeUpdate(orders_2);
+            }
+            rs3.close();
+            rs.close();
+            rs2.close();
+        }
+    }
+
+    public void writeFromDB_DRONE_DELIVERY_WINDOWS() throws SQLException {
+        for (int i = 0; i < warehouse.getDrones().size(); i++) {
+            Drone drone = warehouse.getDrones().get(i);
+            List<DroneDeliveryWindows> windows = drone.getDroneDeliveryWindowsList();
+            for (int j = 0; j < windows.size() ; j++) {
+                String windowSQL = "INSERT INTO DRONE_DELIVERY_WINDOWS " +
+                        "VALUES (NULL ,'"+windows.get(j).getEndBattery()+"','"+windows.get(j).getStartTime()+"','"
+                        +windows.get(j).getEndTime()+"')";
+                stmt.executeUpdate(windowSQL);
+            }
 
         }
-
     }
 
 

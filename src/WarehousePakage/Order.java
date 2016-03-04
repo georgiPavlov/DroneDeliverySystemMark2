@@ -50,6 +50,10 @@ public class Order {
         return quantities;
     }
 
+    public int returnQuantity(int id){
+        return quantities.get(id);
+    }
+
 
 
     public void putToQuantityMap(int id,int quantity){
