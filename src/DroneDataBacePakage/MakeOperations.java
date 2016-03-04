@@ -5,10 +5,10 @@ import WarehousePakage.Warehouse;
 /**
  * Created by georgipavlov on 29.02.16.
  */
-public class makeOperations {
+public class MakeOperations {
      private Warehouse warehouse;
 
-    public makeOperations(Warehouse warehouse) {
+    public MakeOperations(Warehouse warehouse) {
         this.warehouse = warehouse;
     }
 }
