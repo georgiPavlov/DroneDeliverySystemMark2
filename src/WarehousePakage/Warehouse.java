@@ -27,7 +27,9 @@ public class Warehouse {
     private List<History> histories;
     private Distributor distributor;
 
-
+    public Map<Product, Integer> getProducts() {
+        return products;
+    }
 
     public Warehouse(PairCoordinates pairCoordinates) {
         products = new ConcurrentHashMap<>();

@@ -90,10 +90,9 @@ public class Order {
 
         if (Double.compare(order.time, time) != 0) return false;
         if (battery != order.battery) return false;
+        if (id != order.id) return false;
         if (pairCoordinates != null ? !pairCoordinates.equals(order.pairCoordinates) : order.pairCoordinates != null)
             return false;
-        if (products != null ? !products.equals(order.products) : order.products != null) return false;
-        if (quantities != null ? !quantities.equals(order.quantities) : order.quantities != null) return false;
         return date != null ? date.equals(order.date) : order.date == null;
 
     }
@@ -106,9 +105,8 @@ public class Order {
         temp = Double.doubleToLongBits(time);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         result = 31 * result + battery;
-        result = 31 * result + (products != null ? products.hashCode() : 0);
-        result = 31 * result + (quantities != null ? quantities.hashCode() : 0);
         result = 31 * result + (date != null ? date.hashCode() : 0);
+        result = 31 * result + id;
         return result;
     }
 }
