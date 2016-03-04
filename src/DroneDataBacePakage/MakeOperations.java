@@ -20,7 +20,7 @@ public class MakeOperations {
     static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
     static final String DB_URL = "jdbc:mysql://localhost/new_schema";
     static final String USER = "root";
-    static final String PASS = "11111111111";
+    static final String PASS = "111111111111";
 
     private Warehouse warehouse;
     private Connection conn = null;
