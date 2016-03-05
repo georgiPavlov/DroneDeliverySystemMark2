@@ -1,14 +1,12 @@
 package DeliverySuppyPakage;
 
 import CoordinatesPakage.PairCoordinates;
-import DroneDataBacePakage.MakeOperations;
+import DroneDataBasePakage.MakeOperations;
 import ExceptionsPakage.InputExeption;
 import ProjectInterfaces.DeliverySupplyRequest;
 import WarehousePakage.Warehouse;
 
 import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Scanner;
 
 /**
